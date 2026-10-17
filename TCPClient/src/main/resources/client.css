@@ -1,0 +1,227 @@
+/* Chat Client look and feel */
+
+.root {
+    -fx-font-family: "System";
+    -fx-font-size: 14px;
+}
+
+/* ---------- login screen ---------- */
+
+.login-root {
+    -fx-background-color: linear-gradient(to bottom right, #e0e7ff, #f8fafc);
+}
+
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 18;
+    -fx-padding: 32;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.14), 28, 0.1, 0, 10);
+}
+
+.card-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+.muted {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 12.5px;
+}
+
+.field-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #334155;
+}
+
+.text-field {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 10;
+    -fx-padding: 10 12 10 12;
+}
+
+.text-field:focused {
+    -fx-border-color: #6366f1;
+    -fx-effect: dropshadow(gaussian, rgba(99, 102, 241, 0.3), 8, 0.2, 0, 0);
+}
+
+.notice {
+    -fx-font-weight: bold;
+}
+
+.notice.error {
+    -fx-text-fill: #dc2626;
+}
+
+.notice.info {
+    -fx-text-fill: #475569;
+}
+
+/* ---------- buttons ---------- */
+
+.primary-button {
+    -fx-background-color: #4f46e5;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-padding: 11 22 11 22;
+    -fx-cursor: hand;
+}
+
+.primary-button:hover {
+    -fx-background-color: #4338ca;
+}
+
+.primary-button:disabled {
+    -fx-background-color: #a5b4fc;
+    -fx-opacity: 1;
+}
+
+.danger-button {
+    -fx-background-color: white;
+    -fx-text-fill: #dc2626;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-border-color: #fecaca;
+    -fx-border-radius: 10;
+    -fx-padding: 10 22 10 22;
+    -fx-cursor: hand;
+}
+
+.danger-button:hover {
+    -fx-background-color: #fef2f2;
+}
+
+/* ---------- chat screen ---------- */
+
+.chat-root {
+    -fx-background-color: #f1f5f9;
+}
+
+.chat-header {
+    -fx-background-color: white;
+    -fx-padding: 14 20 14 20;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 0 0 1 0;
+}
+
+.identity {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+.status-text {
+    -fx-font-weight: bold;
+    -fx-text-fill: #334155;
+}
+
+.status-dot.online {
+    -fx-fill: #22c55e;
+    -fx-effect: dropshadow(gaussian, rgba(34, 197, 94, 0.7), 8, 0.2, 0, 0);
+}
+
+.status-dot.offline {
+    -fx-fill: #ef4444;
+}
+
+.readonly-banner {
+    -fx-background-color: #fef3c7;
+    -fx-text-fill: #92400e;
+    -fx-font-weight: bold;
+    -fx-padding: 9 20 9 20;
+}
+
+.message-list {
+    -fx-background-color: transparent;
+    -fx-padding: 8;
+}
+
+.message-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 4 6 4 6;
+}
+
+.bubble {
+    -fx-background-radius: 14;
+    -fx-padding: 8 13 9 13;
+}
+
+.msg-header {
+    -fx-font-size: 11.5px;
+    -fx-font-weight: bold;
+}
+
+.bubble.own {
+    -fx-background-color: #4f46e5;
+}
+
+.bubble.own .msg-header {
+    -fx-text-fill: #c7d2fe;
+}
+
+.bubble.own .msg-body {
+    -fx-text-fill: white;
+}
+
+.bubble.other {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 14;
+}
+
+.bubble.other .msg-header {
+    -fx-text-fill: #6366f1;
+}
+
+.bubble.other .msg-body {
+    -fx-text-fill: #1e293b;
+}
+
+.bubble.system,
+.bubble.error {
+    -fx-background-color: transparent;
+    -fx-padding: 2 8 2 8;
+}
+
+.bubble.system .msg-body {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 12.5px;
+    -fx-font-style: italic;
+}
+
+.bubble.error .msg-body {
+    -fx-text-fill: #dc2626;
+    -fx-font-size: 12.5px;
+    -fx-font-weight: bold;
+}
+
+/* ---------- message box ---------- */
+
+.composer {
+    -fx-background-color: white;
+    -fx-padding: 14 20 12 20;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1 0 0 0;
+}
+
+.text-area {
+    -fx-background-color: transparent;
+}
+
+.text-area .content {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 10;
+}
+
+.text-area:focused .content {
+    -fx-border-color: #6366f1;
+}
+
+.text-area:disabled .content {
+    -fx-background-color: #f1f5f9;
+}
