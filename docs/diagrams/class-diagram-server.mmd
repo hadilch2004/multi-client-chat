@@ -1,0 +1,99 @@
+classDiagram
+    direction TB
+
+    class TCPServer {
+        +main(String[] args)$
+    }
+    class ServerApp {
+        -ServerController controller
+        +start(Stage stage)
+        +stop()
+    }
+    class Application {
+        <<JavaFX>>
+    }
+
+    class ServerView {
+        <<View>>
+        -ListView~String~ logList
+        -ListView~String~ userList
+        -Map~String,String~ colorByUser
+        +appendLog(String line)
+        +addUser(String name)
+        +removeUser(String name)
+        +setStatus(String text, boolean online)
+        -colorFor(String name) String
+    }
+    class ServerController {
+        <<Controller>>
+        -ServerView view
+        -ChatServer server
+        +start()
+        +stop()
+        +onLog(String message)
+        +onUserJoined(String name)
+        +onUserLeft(String name)
+    }
+    class ServerListener {
+        <<interface>>
+        +onLog(String message)
+        +onUserJoined(String displayName)
+        +onUserLeft(String displayName)
+    }
+
+    class ChatServer {
+        <<Model>>
+        -ServerConfig config
+        -ServerSocket serverSocket
+        -List~ClientSession~ sessions
+        -Map~String,ClientSession~ usersByName
+        -ExecutorService sessionThreads
+        +start()
+        +getPort() int
+        +close()
+        ~admitUser(ClientSession, String) boolean
+        ~admitGuest(ClientSession) String
+        ~announceJoin(ClientSession)
+        ~broadcastMessage(ClientSession, String)
+        ~sessionEnded(ClientSession)
+    }
+    class ClientSession {
+        <<Model>>
+        -Socket socket
+        -String username
+        -boolean joined
+        +run()
+        ~send(String line)
+        ~close()
+    }
+    class ServerConfig {
+        <<record>>
+        +String host
+        +int port
+        +String source
+        +load()$ ServerConfig
+        +from(Properties, String)$ ServerConfig
+    }
+    class Protocol {
+        <<utility>>
+        +line(String, String...)$ String
+        +escape(String)$ String
+        +unescape(String)$ String
+    }
+
+    TCPServer ..> ServerApp : launches
+    ServerApp --|> Application
+    ServerApp *-- ServerView : creates
+    ServerApp *-- ServerController : creates
+    ServerController ..|> ServerListener
+    ServerController --> ServerView : updates on the FX thread
+    ServerController --> ChatServer : starts and stops
+    ChatServer ..> ServerListener : notifies
+    ChatServer o-- ClientSession : one per client (0..*)
+    ChatServer --> ServerConfig : host and port
+    ClientSession --> ChatServer : admit, broadcast, leave
+    ClientSession ..> Protocol : reads and writes lines
+    ChatServer ..> Protocol
+
+    note for ClientSession "Runs on its own virtual thread"
+    note for ChatServer "No JavaFX imports: the model works without the UI"

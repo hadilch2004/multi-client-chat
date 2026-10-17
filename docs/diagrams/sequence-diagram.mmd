@@ -1,0 +1,39 @@
+sequenceDiagram
+    autonumber
+    actor A as Alice (TCPClient)
+    participant S as TCPServer
+    actor B as Bob (TCPClient)
+
+    Note over A,S: Joining
+    A->>S: open TCP connection (port 3000)
+    Note right of S: accept, start a virtual thread for this client
+    A->>S: JOIN alice
+    alt username is free
+        S-->>A: WELCOME alice
+        Note right of S: log "Welcome alice", add alice to the user list
+    else username already taken
+        S-->>A: ERROR USERNAME_TAKEN, then the server closes the connection
+    else username left empty
+        S-->>A: READONLY Guest-1 (read-only)
+        Note right of S: the guest receives everything but cannot send
+    end
+
+    B->>S: JOIN bob
+    S-->>B: WELCOME bob
+    S-->>A: INFO bob joined the chat
+
+    Note over A,B: Chatting
+    A->>S: MSG hello
+    Note right of S: stamp with sender name and time
+    S-->>A: MSG 12:00:01, alice, hello
+    S-->>B: MSG 12:00:01, alice, hello
+
+    A->>S: ALLUSERS (typed allUsers)
+    S-->>A: USERS alice, bob (only to Alice)
+
+    Note over A,B: Leaving
+    A->>S: LEAVE (typed bye or end, or the LEAVE button)
+    S-->>A: BYE
+    A--xS: connection closed
+    Note right of S: log "Goodbye alice", remove from the user list
+    S-->>B: INFO alice left the chat

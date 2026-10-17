@@ -1,0 +1,28 @@
+flowchart TB
+    subgraph SERVER["«device»  Server computer  (for example 192.168.1.20)"]
+        subgraph SJVM["«execution environment»  Java 21"]
+            SJAR["«artifact»  TCPServer.jar<br/>ChatServer + JavaFX window<br/>1 virtual thread per client<br/>listens on TCP port 3000"]
+        end
+        SCFG["«artifact»  server.properties<br/>server.host=0.0.0.0<br/>server.port=3000"]
+        SCFG -.->|read at start| SJAR
+    end
+
+    subgraph PC1["«device»  Client computer 1"]
+        subgraph PC1JVM["«execution environment»  Java 21"]
+            C1["«artifact»  TCPClient.jar<br/>user: alice"]
+        end
+    end
+    subgraph PC2["«device»  Client computer 2"]
+        subgraph PC2JVM["«execution environment»  Java 21"]
+            C2["«artifact»  TCPClient.jar<br/>user: bob"]
+        end
+    end
+    subgraph PC3["«device»  Client computer 3"]
+        subgraph PC3JVM["«execution environment»  Java 21"]
+            C3["«artifact»  TCPClient.jar<br/>no username: READ-ONLY"]
+        end
+    end
+
+    SJAR <-->|"TCP/IP, port 3000"| C1
+    SJAR <-->|"TCP/IP, port 3000"| C2
+    SJAR <-->|"TCP/IP, port 3000"| C3

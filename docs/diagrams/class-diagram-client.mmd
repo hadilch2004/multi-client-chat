@@ -1,0 +1,131 @@
+classDiagram
+    direction TB
+
+    class TCPClient {
+        +main(String[] args)$
+    }
+    class ClientApp {
+        -ClientController controller
+        +start(Stage stage)
+        +stop()
+    }
+    class Application {
+        <<JavaFX>>
+    }
+
+    class ClientView {
+        <<View>>
+        -StackPane root
+        +login() LoginPane
+        +chat() ChatPane
+        +showLogin()
+        +showChat()
+    }
+    class LoginPane {
+        <<View>>
+        -TextField usernameField
+        -Button joinButton
+        +setOnJoin(Consumer~String~)
+        +showError(String message)
+        +showInfo(String message)
+        +setBusy(boolean busy)
+    }
+    class ChatPane {
+        <<View>>
+        -ListView~ChatLine~ messages
+        -TextArea input
+        -Circle statusDot
+        -Label statusLabel
+        +setIdentity(String, String, boolean)
+        +setOnline(boolean online)
+        +addMessage(ChatLine line)
+        +setOnSend(Consumer~String~)
+        +setOnLeave(Runnable)
+    }
+    class ChatLine {
+        <<record>>
+        +Kind kind
+        +String sender
+        +String time
+        +String text
+    }
+    class Kind {
+        <<enumeration>>
+        OWN
+        OTHER
+        SYSTEM
+        ERROR
+    }
+
+    class ClientController {
+        <<Controller>>
+        -ChatClient client
+        -ClientView view
+        +onChatMessage(String, String, String)
+        +onInfo(String, String)
+        +onUserList(List~String~)
+        +onServerError(String, String)
+        +onDisconnected(boolean, String)
+        +shutdown()
+    }
+    class Listener["ChatClient.Listener"] {
+        <<interface>>
+        +onChatMessage(String, String, String)
+        +onInfo(String, String)
+        +onUserList(List~String~)
+        +onServerError(String, String)
+        +onDisconnected(boolean, String)
+    }
+
+    class ChatClient {
+        <<Model>>
+        -Socket socket
+        -boolean readOnly
+        -String username
+        +connect(String, int, String) JoinResult
+        +startListening()
+        +submit(String input)
+        +leave()
+        +close()
+        +validateUsername(String)$ Optional~String~
+    }
+    class InputCommand {
+        <<enumeration>>
+        EMPTY
+        ALL_USERS
+        LEAVE
+        MESSAGE
+        +parse(String)$ InputCommand
+    }
+    class ClientConfig {
+        <<record>>
+        +String host
+        +int port
+        +String source
+        +resolve(String[])$ ClientConfig
+        +load()$ ClientConfig
+    }
+    class Protocol {
+        <<utility>>
+        +line(String, String...)$ String
+        +escape(String)$ String
+        +unescape(String)$ String
+    }
+
+    TCPClient ..> ClientApp : launches
+    ClientApp --|> Application
+    ClientApp ..> ClientConfig : resolves host and port
+    ClientApp *-- ClientView : creates
+    ClientApp *-- ClientController : creates
+    ClientView *-- LoginPane
+    ClientView *-- ChatPane
+    ChatPane o-- ChatLine : shows 0..* lines
+    ChatLine *-- Kind
+    ClientController ..|> Listener
+    ClientController --> ClientView : updates on the FX thread
+    ClientController --> ChatClient : join, submit, leave
+    ChatClient ..> Listener : notifies
+    ChatClient ..> InputCommand : classifies typed text
+    ChatClient ..> Protocol : reads and writes lines
+
+    note for ChatClient "No JavaFX imports: the model works without the UI"
